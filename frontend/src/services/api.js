@@ -10,6 +10,8 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config)=>{
     const token = TokenService.getLocalAccessToken;
+    console.log(token);
+    
     if(token){
         config.headers["x-access-token"] = token
     }

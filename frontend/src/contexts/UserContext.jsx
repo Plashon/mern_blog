@@ -22,7 +22,6 @@ export const UserProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log(user);
     cookies.set("user", JSON.stringify(user), {
       path: "/",
       expires: new Date(Date.now() + 86400),
@@ -32,7 +31,6 @@ export const UserProvider = ({ children }) => {
   return (
     //ไม่ต้องมีวงเล็บซ้อนไว้
     <UserContext.Provider value={{user,login ,logout}} >
-        
         {children}
     </UserContext.Provider>
   )

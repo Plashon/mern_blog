@@ -11,21 +11,22 @@ const getUser = () => {
   return user;
 };
 
-const setUser = (user) => {
-    cookies.set("user", JSON.stringify(user), {
-      path: "/",
-      expires: new Date(Date.now() + 86400),
-    });
-  };
+const setUser = (user) => { 
+  cookies.set("user", JSON.stringify(user), {
+    path: "/",
+    expires: new Date(Date.now() + 86400),
+  });
+};
 
 const removeUser = () => {
   cookies.remove("user", { path: "/" });
 };
 
 const TokenService = {
-    getLocalAccessToken,
-    setUser,
-    removeUser,
-}
+  getLocalAccessToken,
+  setUser,
+  getUser,
+  removeUser,
+};
 
-export default TokenService
+export default TokenService;
