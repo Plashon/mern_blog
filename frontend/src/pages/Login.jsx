@@ -11,6 +11,7 @@ const Login = () => {
   })
   const navigate = useNavigate();
   const {login, user:loggedUser} = useUserContext();
+
   useEffect(()=>{
     if(loggedUser){
       navigate("/")

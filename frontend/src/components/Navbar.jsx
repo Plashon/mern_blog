@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import Navprofile from "./Navprofile";
+
 import { useUserContext } from "../contexts/UserContext";
 import Swal from "sweetalert2";
+import { useNavigate } from 'react-router';
 
 const Navbar = () => {
   const { user, logout } = useUserContext();
-  console.log(logout);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     Swal.fire({
@@ -22,6 +22,8 @@ const Navbar = () => {
           title: "Logout",
           text: "Logout successfully",
           icon: "success",
+        }).then(() => {
+          navigate('/');  
         });
       }
     });
@@ -36,13 +38,20 @@ const Navbar = () => {
       </div>
       {user ? (
         <div className="navbar-end gap-2">
-          <div className="flex-none">
-            <ul className="menu menu-horizontal px-1">
+          <div className="flex-none ">
+            <ul className="menu menu-horizontal px-1 gap-2">
               <li>
-                <a  className="btn-outline" >create</a>
+                <a className="btn btn-outline hover:btn-accent" href="/create">
+                  create new post
+                </a>
               </li>
               <li>
-                <a className=" btn-outline" onClick={handleLogout}>logout</a>
+                <a
+                  className="btn btn-outline hover:btn-error"
+                  onClick={handleLogout}
+                >
+                  ({user.username}) logout
+                </a>
               </li>
             </ul>
           </div>
@@ -50,12 +59,16 @@ const Navbar = () => {
       ) : (
         <div className="navbar-end gap-2">
           <div className="flex-none">
-            <ul className="menu menu-horizontal px-1">
+            <ul className="menu menu-horizontal px-1 gap-2">
               <li>
-                <a  className="btn-outline outline-1" href="/login">login</a>
+                <a className="btn btn-outline outline-1" href="/login">
+                  login
+                </a>
               </li>
               <li>
-                <a  className="btn-outline outline-1" href="/register">register</a>
+                <a className="btn btn-outline outline-1" href="/register">
+                  register
+                </a>
               </li>
             </ul>
           </div>

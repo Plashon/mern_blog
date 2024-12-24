@@ -1,13 +1,71 @@
-import React, { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
+import PostService from "./../services/post.service";
+import Editor from "../components/Editor";
 
 const Create = () => {
+  const [postDetail, setPostDetail] = useState({
+    title: "",
+    summary: "",
+    content: "",
+    file: null,
+  });
+  const [content, setContent] = useState("");
+  const editorRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name == "file") {
+      setPostDetail({ ...postDetail, [name]: e.target.files[0] });
+    } else {
+      setPostDetail({ ...postDetail, [name]: value });
+    }
+  };
+
+  const handleContentChange = (value) => {
+    setContent(value);
+    setPostDetail({ ...postDetail, content: content });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const data = new FormData();
+      data.set("title", postDetail.title);
+      data.set("summary", postDetail.summary);
+      data.set("content", postDetail.content);
+      data.set("file", postDetail.file);
+      const response = await PostService.createPost(data);
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Create new post",
+          text: response.data.message,
+          icon: "success",
+        }).then(() => {
+          setPostDetail({
+            title: "",
+            summary: "",
+            content: "",
+            file: null,
+          });
+          navigate("/");
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Create new post",
+        text: error?.response?.data?.message || error.message,
+        icon: "error",
+      });
+    }
+  };
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-5/6">
+    <div className="flex justify-center items-center h-screen max-h-fit w-5/6">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-5/6 max-w-2xl">
         <h1 className="text-2xl font-bold text-center mb-4">Create Post</h1>
-        <form>
+        <div>
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -18,7 +76,10 @@ const Create = () => {
             <input
               type="text"
               id="title"
-              className="input input-bordered w-full"
+              name="title"
+              value={postDetail.title}
+              onChange={handleChange}
+              className="input input-bordered w-full truncate"
               required
             />
           </div>
@@ -32,7 +93,10 @@ const Create = () => {
             <input
               type="text"
               id="summary"
-              className="input input-bordered w-full"
+              name="summary"
+              value={postDetail.summary}
+              onChange={handleChange}
+              className="input input-bordered w-full truncate"
               required
             />
           </div>
@@ -43,23 +107,22 @@ const Create = () => {
             >
               Content
             </label>
-            <ReactQuill
+        <div className="h-32">
+              <Editor
+                value={content}
+                onChange={handleContentChange}
+                ref={editorRef}
+              />
+            </div>
+            {/* <input
+              type="text"
               id="content"
-              className="textarea textarea-bordered w-full"
-              rows="4"
-             theme="snow"
-              modules={{
-                toolbar: [
-                  [{ header: [1, 2, false] }], // Combine header options
-                  [{ list: "ordered" }, { list: "bullet" }],
-                  ["bold", "italic", "underline"],
-                  ["link"],
-                  [{ align: [] }], // Include alignment options (left, center, right)
-                  ["image"],
-                  ["clean"],
-                ],
-              }}
-            />
+              name="content"
+              value={postDetail.content}
+              onChange={handleChange}
+              className="input input-bordered w-full truncate"
+              required
+            /> */}
           </div>
           <div className="mb-4">
             <label
@@ -70,6 +133,8 @@ const Create = () => {
             </label>
             <input
               type="file"
+              name="file"
+              onChange={handleChange}
               id="image"
               className="file-input file-input-bordered w-full"
               accept="image/*"
@@ -77,14 +142,18 @@ const Create = () => {
             />
           </div>
           <div className="flex items-center justify-between">
-            <button type="submit" className="btn btn-primary w-full">
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              onClick={handleSubmit}
+            >
               Create Post
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Create
+export default Create;

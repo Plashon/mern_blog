@@ -13,9 +13,9 @@ export const UserProvider = ({ children }) => {
 
   const logout = () => {
     AuthService.logout();
-    setUser(null);
+    setUser("");
   };
-  
+
   function getUser() {
     const savedUser = cookies.get("user") || null;
     return savedUser;
@@ -24,16 +24,16 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     cookies.set("user", JSON.stringify(user), {
       path: "/",
-      expires: new Date(Date.now() + 86400),
+      expires: new Date(Date.now() + 86400 * 1000),
     });
   }, [user]);
 
   return (
     //ไม่ต้องมีวงเล็บซ้อนไว้
-    <UserContext.Provider value={{user,login ,logout}} >
-        {children}
+    <UserContext.Provider value={{ user, login, logout }}>
+      {children}
     </UserContext.Provider>
-  )
+  );
 };
 
-export const useUserContext = () => useContext(UserContext)
+export const useUserContext = () => useContext(UserContext);

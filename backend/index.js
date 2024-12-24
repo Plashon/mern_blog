@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const userRouter = require("./router/user.router")
+const userRouter = require("./router/user.router");
+const postRouter = require("./router/post.router");
 
 require("dotenv").config();
 
@@ -15,7 +16,7 @@ try {
   mongoose.connect(DB_URL);
   console.log("connect to mongo db successfully");
 } catch (error) {
-    console.log("connect failed "+ error);
+  console.log("connect failed " + error);
 }
 
 app.use(cors({ origin: BASE_URL, credentials: true }));
@@ -25,9 +26,11 @@ app.get("/", (req, res) => {
   res.send("<h1>welcome to se npru blog restful api</h1>");
 });
 
-//router
-app.use("/api/v1/auth",userRouter)
+app.use("/upload", express.static(__dirname + "/upload"));
 
+//router
+app.use("/api/v1/auth", userRouter);
+app.use("/api/v1/post", postRouter);
 app.listen(PORT, () => {
   console.log("Server is running on http://localhost:" + PORT);
 });

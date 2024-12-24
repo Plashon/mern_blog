@@ -78,9 +78,6 @@ exports.login = async (req, res) => {
     //   expiresIn: 86400,
     // });
 
-   
-    
-
   } catch (error) {
     res.status(500).send({
       message: error.message || "Something went wrong while logging in",
