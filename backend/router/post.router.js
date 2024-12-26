@@ -6,6 +6,7 @@ const authJwt = require("../middleware/authJwt.middleware");
 
 router.post("", authJwt.verifyToken, upload, postController.createPost);
 router.get("", postController.getAllPosts);
-// router.get("post/:id", authJwt.verifyToken,postController.getPostDetail)
 router.get("/:id", postController.getPostById);
+router.delete("/:id", authJwt.verifyToken, postController.deletePostById);
+router.put("/:id", authJwt.verifyToken, upload, postController.updatePostById);
 module.exports = router;

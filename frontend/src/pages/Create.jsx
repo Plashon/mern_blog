@@ -11,6 +11,7 @@ const Create = () => {
     content: "",
     file: null,
   });
+  
   const [content, setContent] = useState("");
   const editorRef = useRef(null);
 
@@ -38,6 +39,7 @@ const Create = () => {
       data.set("content", postDetail.content);
       data.set("file", postDetail.file);
       const response = await PostService.createPost(data);
+      console.log("Response Data:", response);
       if (response.status === 200) {
         Swal.fire({
           title: "Create new post",
@@ -114,15 +116,6 @@ const Create = () => {
                 ref={editorRef}
               />
             </div>
-            {/* <input
-              type="text"
-              id="content"
-              name="content"
-              value={postDetail.content}
-              onChange={handleChange}
-              className="input input-bordered w-full truncate"
-              required
-            /> */}
           </div>
           <div className="mb-4">
             <label

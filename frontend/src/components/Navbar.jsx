@@ -36,6 +36,11 @@ const Navbar = () => {
           MERN-SE
         </a>
       </div>
+      <div className="navbar-center">
+      <a href="/" className="btn btn-ghost text-lg">
+          Home Page
+        </a>
+      </div>
       {user ? (
         <div className="navbar-end gap-2">
           <div className="flex-none ">
