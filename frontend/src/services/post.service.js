@@ -36,6 +36,7 @@ const PostService = {
     getAllPosts,
     getPostById,
     deleteById,
+    
     updatePost,
 }
 
