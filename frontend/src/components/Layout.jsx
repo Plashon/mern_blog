@@ -12,7 +12,7 @@ const Layout = () => {
         <main className="flex-grow flex items-center justify-center container mx-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
-        <footer>
+        <footer className="sticky bottom-0">
           <Footer />
         </footer>
       </div>

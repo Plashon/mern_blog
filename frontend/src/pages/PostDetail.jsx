@@ -12,6 +12,7 @@ const PostDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  
   const handleDelete = async (id) => {
     Swal.fire({
       title: "Delete Post",

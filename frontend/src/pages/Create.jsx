@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import PostService from "./../services/post.service";
 import Editor from "../components/Editor";
+import { useUserContext } from "../contexts/UserContext";
 
 const Create = () => {
   const [postDetail, setPostDetail] = useState({
@@ -11,11 +12,22 @@ const Create = () => {
     content: "",
     file: null,
   });
-  
+  const { user } = useUserContext();
   const [content, setContent] = useState("");
   const editorRef = useRef(null);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      Swal.fire({
+        title: "Access Denied",
+        text: "You must be logged in to access this page.",
+        icon: "warning",
+      }).then(() => {
+        navigate("/login");
+      });
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,6 +75,7 @@ const Create = () => {
       });
     }
   };
+
   return (
     <div className="flex justify-center items-center h-screen max-h-fit w-5/6">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-5/6 max-w-2xl">
@@ -109,7 +122,7 @@ const Create = () => {
             >
               Content
             </label>
-        <div className="h-32">
+            <div className="h-32">
               <Editor
                 value={content}
                 onChange={handleContentChange}

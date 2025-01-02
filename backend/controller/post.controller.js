@@ -47,7 +47,7 @@ exports.getAllPosts = async (req, res) => {
 };
 
 exports.getPostById = async (req, res) => {
-  const { id } = req.params; // Assuming _id is passed as a route parameter
+  const { id } = req.params;
   try {
     const postDetail = await PostModel.findById(id).populate("author", [
       "username",

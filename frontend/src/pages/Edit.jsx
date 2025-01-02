@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router";
 import PostService from "./../services/post.service";
 import Editor from "../components/Editor";
+import { useUserContext } from "../contexts/UserContext";
 import Swal from "sweetalert2";
 
 const Edit = () => {
@@ -14,20 +15,37 @@ const Edit = () => {
   const { id } = useParams();
   const [content, setContent] = useState("");
   const editorRef = useRef(null);
+  const { user } = useUserContext();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const response = await PostService.getPostById(id);
-        const post = response.data;
-        setPostDetail({
-          title: post.title,
-          summary: post.summary,
-          content: post.content,
-          file: post.cover,
-        });
-        setContent(post.content);
+        if(response.status === 200) {
+          const post = response.data;
+
+          if (user?.id !== post.author._id) {
+            Swal.fire({
+              title: "Access Denied",
+              text: "You are not authorized to edit this post.",
+              icon: "error",
+            }).then(() => {
+              navigate("/");
+            });
+            return; 
+          }
+  
+          setPostDetail({
+            title: post.title,
+            summary: post.summary,
+            content: post.content,
+            file: post.cover,
+          });
+          setContent(post.content);  
+        }
+       
       } catch (error) {
         Swal.fire({
           title: "Post Detail",
@@ -39,7 +57,8 @@ const Edit = () => {
       }
     };
     fetchPost();
-  }, [id]);
+  }, [id, user, navigate]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,7 +91,7 @@ const Edit = () => {
           text: "Post updated successfully.",
           icon: "success",
         }).then(() => {
-          navigate(`/`);
+          navigate(`/postDetail/${id}`);
         });
       } else {
         Swal.fire({
@@ -99,7 +118,7 @@ const Edit = () => {
   return (
     <div className="flex justify-center items-center h-screen max-h-fit w-5/6">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-5/6 max-w-2xl">
-        <h1 className="text-2xl font-bold text-center mb-4">Edit Post</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">Update Post</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -172,7 +191,7 @@ const Edit = () => {
             <button
               type="button"
               className="btn btn-error"
-              onClick={() => navigate("/")}
+              onClick={() => navigate(`/postDetail/${id}`)}
             >
               Cancel Update
             </button>
