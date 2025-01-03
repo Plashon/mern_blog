@@ -6,7 +6,6 @@ require("dotenv").config();
 
 exports.createPost = async (req, res) => {
   //file upload
-  const { path: cover } = req.file;
   const author = req.userId;
   const { title, summary, content } = req.body;
   try {
@@ -17,14 +16,14 @@ exports.createPost = async (req, res) => {
       title,
       summary,
       content,
-      cover,
+      cover:req.file.firebaseUrl,
       author,
     });
     res.json(postDoc);
   } catch (error) {
     res.status(500).send({
       message:
-        error.massage || "Something error occurred while creating a new post",
+        error.message || "Something error occurred while creating a new post",
     });
   }
 };
@@ -107,9 +106,8 @@ exports.updatePostById = async (req, res) => {
     postDoc.title = title;
     postDoc.summary = summary;
     postDoc.content = content;
-    if (req.file) {
-      const { path: cover } = req.file;
-      postDoc.cover = cover;
+    if (req.file.firebaseUrl) {
+      postDoc.cover = req.file.firebaseUrl;
     }
     await postDoc.save();
     res.json(postDoc);
