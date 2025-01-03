@@ -1,7 +1,6 @@
 const { response } = require("express");
 const PostModel = require("../model/Post");
 const jwt = require("jsonwebtoken");
-const { post } = require("../router/user.router");
 require("dotenv").config();
 
 exports.createPost = async (req, res) => {
@@ -106,7 +105,7 @@ exports.updatePostById = async (req, res) => {
     postDoc.title = title;
     postDoc.summary = summary;
     postDoc.content = content;
-    if (req.file.firebaseUrl) {
+    if (req.file) {
       postDoc.cover = req.file.firebaseUrl;
     }
     await postDoc.save();
@@ -117,3 +116,21 @@ exports.updatePostById = async (req, res) => {
     });
   }
 };
+
+exports.getPostByUserId = async (req, res) => {
+  const {id} = req.params;
+  try {
+    const posts = await PostModel.find({author:id})
+      .populate("author", ["username"])
+      .sort({
+        createdAt: -1,
+      })
+      .limit(10);
+    res.json(posts);
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.massage || "Something error occurred while getting all posts by author",
+    });
+  }
+}

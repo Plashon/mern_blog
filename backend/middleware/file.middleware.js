@@ -47,7 +47,9 @@ function checkFileType(file, cb) {
 //upload file to firebase
 async function uploadToFirebase(req, res, next) {
   if (!req.file) {
-    return res.status(400).json({ message: "image is required" });
+    // return res.status(400).json({ message: "image is required" });
+    next();
+    return;
   }
   const storageRef = ref(firebaseStorage, `upload/${req.file.originalname}`);
   // meta data file type
@@ -64,15 +66,44 @@ async function uploadToFirebase(req, res, next) {
     //get file url from firebase
     req.file.firebaseUrl = await getDownloadURL(snapshot.ref);
     next();
+    return;
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message:
-          error.message ||
-          "Something went wrong while uploading image to firebase",
-      });
+    res.status(500).json({
+      message:
+        error.message ||
+        "Something went wrong while uploading image to firebase",
+    });
   }
 }
+// async function uploadToFirebase(req, res, next) {
+//   if (!req.file) {
+//     // return res.status(400).json({ message: "image is required" });
+//     next();
+//   }else{
+//     const storageRef = ref(firebaseStorage, `upload/${req.file?.originalname}`);
+//   // meta data file type
+//   const metadata = {
+//     contentType: req.file?.mimetype,
+//   };
+//   try {
+//     //uploading file to firebase
+//     const snapshot = await uploadBytesResumable(
+//       storageRef,
+//       req.file?.buffer,
+//       metadata
+//     );
+//     //get file url from firebase
+//     req.file.firebaseUrl = await getDownloadURL(snapshot.ref);
+//     next();
+//   } catch (error) {
+//     res.status(500).json({
+//       message:
+//         error.message ||
+//         "Something went wrong while uploading image to firebase",
+//     });
+//   }
+//   }
+  
+// }
 
 module.exports = { upload, uploadToFirebase };

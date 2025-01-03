@@ -1,7 +1,6 @@
-
 import { useUserContext } from "../contexts/UserContext";
 import Swal from "sweetalert2";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router";
 
 const Navbar = () => {
   const { user, logout } = useUserContext();
@@ -23,7 +22,7 @@ const Navbar = () => {
           text: "Logout successfully",
           icon: "success",
         }).then(() => {
-          navigate('/');  
+          navigate("/");
         });
       }
     });
@@ -37,7 +36,7 @@ const Navbar = () => {
         </a>
       </div>
       <div className="navbar-center">
-      <a href="/" className="btn btn-ghost text-lg">
+        <a href="/" className="btn btn-ghost text-lg">
           Home Page
         </a>
       </div>
@@ -45,6 +44,22 @@ const Navbar = () => {
         <div className="navbar-end gap-2">
           <div className="flex-none ">
             <ul className="menu menu-horizontal px-1 gap-2">
+              <li
+                className="tooltip tooltip-bottom"
+                data-tip="View your all post"
+              >
+                <a
+                  className="btn btn-outline hover:btn-info btn-circle avatar"
+                  href={`/authorPost/${user.id}`}
+                >
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="Tailwind CSS Navbar component"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    />
+                  </div>
+                </a>
+              </li>
               <li>
                 <a className="btn btn-outline hover:btn-accent" href="/create">
                   create new post
@@ -55,7 +70,7 @@ const Navbar = () => {
                   className="btn btn-outline hover:btn-error"
                   onClick={handleLogout}
                 >
-                  ({user.username}) logout
+                  ({user.username})logout
                 </a>
               </li>
             </ul>

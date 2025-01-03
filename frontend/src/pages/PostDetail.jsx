@@ -71,7 +71,7 @@ const PostDetail = () => {
           </time>
           <div className="author mb-2">
             <span className="font-semibold">
-              BY <a className="text-sky-600"> @{postDetail.author.username}</a>
+              BY <a className="text-sky-600" href={`/authorPost/${postDetail.author._id}`}> @{postDetail.author.username}</a>
             </span>
           </div>
         </div>
